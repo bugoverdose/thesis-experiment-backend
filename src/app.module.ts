@@ -5,6 +5,8 @@ import { CommonModule } from './common/common.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/users.entity';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from './jwt/jwt.module';
+import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi'; // TS 및 NestJS로 export 되어있지 않은 패키지 import 방법
 
 @Module({
@@ -37,9 +39,17 @@ import * as Joi from 'joi'; // TS 및 NestJS로 export 되어있지 않은 패�
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       playground: process.env.NODE_ENV !== 'production', // 배포하지 않았을 때만 playground에 접근가능. 배포하면 false가 되어서 접근 불가.
+      context: ({ req }) => {
+        const token = req.headers['x-jwt'] || req.headers['X-JWT'];
+        return { token }; // http headers에 담긴 토큰을 token 변수에 담아 guard => resolver들로 전달.
+      },
     }),
     UsersModule,
     CommonModule,
+    JwtModule.forRoot({
+      privateKey: process.env.TOKEN_SECRET,
+    }),
+    AuthModule,
   ],
   controllers: [],
   providers: [],

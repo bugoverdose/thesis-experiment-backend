@@ -1,24 +1,45 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { AuthUser } from 'src/auth/auth-user.decorator';
+import {
+  CreateLocalAccountInput,
+  CreateLocalAccountOutput,
+} from './dtos/create-local-account';
+import { LocalLoginInput, LocalLoginOutput } from './dtos/local-login';
+import { SaveResponseInput, SaveResponseOutput } from './dtos/save-response';
+import { SeeProfileInput, SeeProfileOutput } from './dtos/see-profile.dto';
+import { User } from './entities/users.entity';
 import { UsersService } from './users.service';
 
 @Resolver()
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Mutation((of) => CreateAccountOutput)
-  // createAccount(
-  //   @Args('input') createAccountInput: CreateAccountInput,
-  // ): Promise<CreateAccountOutput> {
-  //   return this.userService.createAccount(createAccountInput);
-  // }
+  @Query((of) => SeeProfileOutput)
+  seeProfile(
+    @Args('input') seeProfileInput: SeeProfileInput,
+  ): Promise<SeeProfileOutput> {
+    return this.usersService.seeProfile(seeProfileInput);
+  }
 
-  // @Mutation((of) => LoginOutput)
-  // login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
-  //   return this.userService.login(loginInput);
-  // }
+  @Mutation((returns) => CreateLocalAccountOutput)
+  createLocalAccount(
+    @Args('input') createLocalAccountInput: CreateLocalAccountInput,
+  ): Promise<CreateLocalAccountOutput> {
+    return this.usersService.createLocalAccount(createLocalAccountInput);
+  }
 
-  @Query((returns) => String)
-  helloWorld(): string {
-    return this.usersService.helloWorld();
+  @Mutation((of) => LocalLoginOutput)
+  localLogin(
+    @Args('input') loginInput: LocalLoginInput,
+  ): Promise<LocalLoginOutput> {
+    return this.usersService.localLogin(loginInput);
+  }
+
+  @Mutation((of) => SaveResponseOutput)
+  saveResponse(
+    @AuthUser() authUser: User,
+    @Args('input') saveResponseInput: SaveResponseInput,
+  ): Promise<SaveResponseOutput> {
+    return this.usersService.saveResponse(authUser, saveResponseInput);
   }
 }
