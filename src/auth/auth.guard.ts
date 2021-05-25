@@ -1,17 +1,28 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from 'src/jwt/jwt.service';
 import { UsersService } from 'src/users/users.service';
+import { PUBLIC_RESOLVER } from '../common/common.constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
+    private readonly reflector: Reflector, // Resolver에 설정한 metadata 받기 위해 reflector 주입.
     private readonly jwtService: JwtService, // JwtModule에서 JwtService를 export해줘서 주입 가능.
     private readonly usersService: UsersService, // UsersModule에서 UsersService를 export해서 주입 가능. // AuthModule에서 imports: [UsersModule]해줘야 주입 가능.
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
+      const isPublic = this.reflector.get<typeof PUBLIC_RESOLVER>(
+        'accessibility',
+        context.getHandler(),
+      ); // accessibility : 해당 Resolver에 @Public 설정 여부
+      if (isPublic) {
+        return true; // @Public을 설정한 Resolver들은 로그인하지 않아도 접근 가능 & 누구나 접근 가능.
+      }
+
       const gqlContext = await GqlExecutionContext.create(context).getContext(); // gqlContext : AppModule의 GraphQLModule.forRoot의 context 메서드가 return한 객체 // ExecutionContext(= http req 혹은 ws connection)의 정보를 GraphQL context로 받기.
       const token = gqlContext.token; //사용자가 고의로 token으로 이상한 데이터 입력할 수도 있음 => toString()
       if (token) {

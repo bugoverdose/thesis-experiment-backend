@@ -25,12 +25,12 @@ export class User extends CoreEntity {
   // kakaoId?: string;
 
   @Field((type) => String) // GraphQL
-  @Column()
+  @Column({ nullable: true })
   @IsString() // class-validator
   localId?: string;
 
   @Field((type) => String)
-  @Column({ select: false }) // Repo.findOne에서 누락 설정. 접근하려면 select 옵션 필요. // 해당 칼럼만 제외된 UserEntity 객체를 Repo.save 메서드에 전달 가능해짐.
+  @Column({ select: false, nullable: true }) // Repo.findOne에서 누락 설정. 접근하려면 select 옵션 필요. // 해당 칼럼만 제외된 UserEntity 객체를 Repo.save 메서드에 전달 가능해짐.
   @IsString()
   password?: string; // this.usersRepo.findOne( { email }, { select: ['id', 'password'] },) // 해당 칼럼의 데이터들만 가져오기.
 
@@ -40,37 +40,37 @@ export class User extends CoreEntity {
   accountType: AccountType;
 
   @Field((type) => Int)
-  @Column()
+  @Column({ nullable: true })
   @IsInt()
   gender?: number; // 0: 남 // 1: 여
 
   @Field((type) => Int)
-  @Column()
+  @Column({ nullable: true })
   @IsInt()
   age?: number; // 만 나이
 
   @Field((type) => Int)
-  @Column()
+  @Column({ nullable: true })
   @IsInt()
   question1?: number;
 
   @Field((type) => Int)
-  @Column()
+  @Column({ nullable: true })
   @IsInt()
   question2?: number;
 
   @Field((type) => Int)
-  @Column()
+  @Column({ nullable: true })
   @IsInt()
   question3?: number;
 
   @Field((type) => Int)
-  @Column()
+  @Column({ nullable: true })
   @IsInt()
   question4?: number;
 
   @Field((type) => String)
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   address?: string; // 기프티콘 제공용 연락처. 진짜로 선택사항.
 

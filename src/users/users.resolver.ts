@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
+import { Public } from 'src/auth/public.decorator';
 import {
   CreateLocalAccountInput,
   CreateLocalAccountOutput,
@@ -21,6 +22,7 @@ export class UsersResolver {
     return this.usersService.seeProfile(seeProfileInput);
   }
 
+  @Public()
   @Mutation((returns) => CreateLocalAccountOutput)
   createLocalAccount(
     @Args('input') createLocalAccountInput: CreateLocalAccountInput,
@@ -28,6 +30,7 @@ export class UsersResolver {
     return this.usersService.createLocalAccount(createLocalAccountInput);
   }
 
+  @Public()
   @Mutation((of) => LocalLoginOutput)
   localLogin(
     @Args('input') loginInput: LocalLoginInput,
