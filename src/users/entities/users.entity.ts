@@ -5,7 +5,7 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { IsEnum, IsInt, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/core.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -33,6 +33,11 @@ export class User extends CoreEntity {
   @Column({ select: false, nullable: true }) // Repo.findOne에서 누락 설정. 접근하려면 select 옵션 필요. // 해당 칼럼만 제외된 UserEntity 객체를 Repo.save 메서드에 전달 가능해짐.
   @IsString()
   password?: string; // this.usersRepo.findOne( { email }, { select: ['id', 'password'] },) // 해당 칼럼의 데이터들만 가져오기.
+
+  @Field((type) => String) // GraphQL
+  @Column({ nullable: true })
+  @IsString()
+  kakaoId?: string;
 
   @Field((type) => AccountType)
   @Column({ type: 'enum', enum: AccountType })
@@ -69,10 +74,75 @@ export class User extends CoreEntity {
   @IsInt()
   question4?: number;
 
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question5?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question6?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question7?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question8?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question9?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question10?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question11?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question12?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question13?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question14?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question15?: number;
+
+  @Field((type) => Int)
+  @Column({ nullable: true })
+  @IsInt()
+  question16?: number;
+
   @Field((type) => String)
   @Column({ nullable: true })
   @IsString()
   address?: string; // 기프티콘 제공용 연락처. 진짜로 선택사항.
+
+  @Field((type) => Boolean)
+  @Column({ nullable: true })
+  @IsString()
+  localScreening?: string;
 
   // TypeORM hooks
   @BeforeInsert() // 새로운 UserEntity를 Repo.create 후, Repo.save 직전에 자동실행.

@@ -9,6 +9,6 @@ export class KakaoLoginInput {
 
 @ObjectType()
 export class KakaoLoginOutput extends CoreOutput {
-  @Field((type) => String)
+  @Field((type) => String, { nullable: true }) // token이 없는 경우, nullable:true가 아니면 graphQL 에러 발생.
   token?: string;
 }

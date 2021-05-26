@@ -26,7 +26,7 @@ import * as Joi from 'joi'; // TS 및 NestJS로 export 되어있지 않은 패�
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      ssl: { rejectUnauthorized: false }, // Heroku 배포시 SSL 관련 에러 발생시 필요.
+      // ssl: { rejectUnauthorized: false }, // 배포시 SSL 관련 에러 발생시 추가.
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT, // .env의 환경변수들은 전부 string 타입. +를 붙여서 number로
       username: process.env.DB_USERNAME,
@@ -38,7 +38,7 @@ import * as Joi from 'joi'; // TS 및 NestJS로 export 되어있지 않은 패�
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
-      playground: process.env.NODE_ENV !== 'production', // 배포하지 않았을 때만 playground에 접근가능. 배포하면 false가 되어서 접근 불가.
+      playground: process.env.NODE_ENV !== 'prod', // 배포하지 않았을 때만 playground에 접근가능. 배포하면 false가 되어서 접근 불가.
       context: ({ req }) => {
         const token = req.headers['x-jwt'] || req.headers['X-JWT'];
         return { token }; // http headers에 담긴 토큰을 token 변수에 담아 guard => resolver들로 전달.
